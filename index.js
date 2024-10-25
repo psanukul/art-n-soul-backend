@@ -33,9 +33,10 @@ app.use(
 );
 
 import authRouter from "./src/routes/auth.routes.js";
-
+import photographyRouter from "./src/routes/photography.routes.js"
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/photography", photographyRouter);
 
 
 

@@ -40,7 +40,6 @@ export const uploadFile = async (files) => {
   }
 };
 
-
 export const deleteFilesFromCloudinary = async (fileNames) => {
   const fileNameLen = fileNames.length
   for(let i=0;i<fileNameLen;i++){
@@ -52,3 +51,5 @@ export const deleteFilesFromCloudinary = async (fileNames) => {
   } 
   return {status: true, message: 'file deleted successfully'}
 }
+
+export default cloudinary
