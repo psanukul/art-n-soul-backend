@@ -8,7 +8,7 @@ import {
 
 const Router = express.Router();
 
-Router.route("/").post(upload.array("images", 10), createPhotography);
+Router.route("/").post(upload.array("images[]"), createPhotography);
 
 Router.route("/:photographyId")
   .patch(upload.array("images"), uploadPhotographyImages)
