@@ -108,10 +108,10 @@ export const uploadPhotographyImages = asyncHandler(async (req, res) => {
 });
 
 export const deletePhotography = asyncHandler(async (req, res) => {
-    const { id } = req.params;
+    const { photographyId } = req.params;
   
     try {
-      const photography = await Photography.findByIdAndDelete(id);
+      const photography = await Photography.findByIdAndDelete(photographyId);
   
       if (!photography) {
         return res.status(404).json({ success: false, message: "Photography document not found." });
@@ -120,7 +120,7 @@ export const deletePhotography = asyncHandler(async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Photography document deleted successfully.",
-        deletedId: id,
+        deletedId: photographyId,
       });
     } catch (error) {
       console.error("Error deleting photography:", error);

@@ -10,6 +10,19 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+export const deleteMediaFromCloudinary = async (media, resourceType = 'image') => {
+  const publicId = media.url.split('/').slice(-2).join('/').split('.')[0]; 
+  console.log(`Deleting Cloudinary resource with public ID: ${publicId}`);
+
+  const result = await cloudinary.uploader.destroy(publicId, {
+    resource_type: resourceType,
+    folder: media.categoryModel === "Photography" ? "photography" : "films", // Determine folder based on categoryModel
+  });
+
+  console.log(`Cloudinary deletion result:`, result);
+  return result;  
+};
+
 export const uploadFile = async (files) => {
   try {
     let resultArr = await Promise.all(
