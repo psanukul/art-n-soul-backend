@@ -55,6 +55,40 @@ export const createPhotography = asyncHandler(async (req, res) => {
   }
 });
 
+export const updatePhotography = asyncHandler(async (req, res) => {
+  try {
+    const { photographyId } = req.params;
+    console.log(photographyId);
+    const { description, date, name, type } = req.body;
+
+    const photography = await Photography.findById(photographyId);
+    if (!photography) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Photosdsdsgraphy not found." });
+    }
+
+    if (description) photography.description = description;
+    if (date) photography.date = date;
+    if (name) photography.name = name;
+    if (type) photography.type = type;
+
+    await photography.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Photography updated successfully.",
+      photography,
+    });
+  } catch (error) {
+    console.error("Error updating photography:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not update photography.",
+    });
+  }
+});
+
 export const uploadPhotographyImages = asyncHandler(async (req, res) => {
   try {
     const { photographyId } = req.params;
@@ -98,32 +132,35 @@ export const uploadPhotographyImages = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error("Error uploading images:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server Error. Could not upload images.",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not upload images.",
+    });
   }
 });
 
 export const deletePhotography = asyncHandler(async (req, res) => {
-    const { photographyId } = req.params;
-  
-    try {
-      const photography = await Photography.findByIdAndDelete(photographyId);
-  
-      if (!photography) {
-        return res.status(404).json({ success: false, message: "Photography document not found." });
-      }
-  
-      res.status(200).json({
-        success: true,
-        message: "Photography document deleted successfully.",
-        deletedId: photographyId,
-      });
-    } catch (error) {
-      console.error("Error deleting photography:", error);
-      res.status(500).json({ success: false, message: "Server Error. Could not delete photography." });
+  const { photographyId } = req.params;
+
+  try {
+    const photography = await Photography.findByIdAndDelete(photographyId);
+
+    if (!photography) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Photography document not found." });
     }
-  });
+
+    res.status(200).json({
+      success: true,
+      message: "Photography document deleted successfully.",
+      deletedId: photographyId,
+    });
+  } catch (error) {
+    console.error("Error deleting photography:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not delete photography.",
+    });
+  }
+});
