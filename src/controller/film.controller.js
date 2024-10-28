@@ -92,7 +92,7 @@ export const updateFilm = asyncHandler(async (req, res) => {
     await film.save();
 
     if (videoUrl) {
-        console.log(videoUrl)
+      console.log(videoUrl);
       await Media.findOneAndUpdate(
         { category: film._id, categoryModel: "Film", type: "video" },
         { url: videoUrl },
@@ -110,6 +110,76 @@ export const updateFilm = asyncHandler(async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error. Could not update film.",
+    });
+  }
+});
+
+export const getFilm = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Film ID is required.",
+      });
+    }
+
+    const film = await Film.findById(id);
+
+    if (!film) {
+      return res.status(404).json({
+        success: false,
+        message: "Film not found.",
+      });
+    }
+
+    const mediaFiles = await Media.find({
+      category: film._id,
+      categoryModel: "Film",
+      type: "video",
+    });
+
+    res.status(200).json({
+      success: true,
+      film,
+      mediaFiles,
+    });
+  } catch (error) {
+    console.error("Error fetching film:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not fetch film.",
+    });
+  }
+});
+
+export const getFilms = asyncHandler(async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query; 
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const films = await Film.find({}, 'name description date type thumbnail')
+      .skip(skip)
+      .limit(Number(limit));
+
+    const totalFilms = await Film.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      films,
+      pagination: {
+        total: totalFilms,
+        page: Number(page),
+        pages: Math.ceil(totalFilms / limit),
+        limit: Number(limit),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching films:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not fetch films.",
     });
   }
 });

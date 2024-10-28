@@ -12,7 +12,6 @@ export const createPhotography = asyncHandler(async (req, res) => {
         .status(400)
         .json({ success: false, message: "All fields are required." });
     }
-    console.log(req.files);
 
     if (!req.files || req.files.length === 0) {
       return res
