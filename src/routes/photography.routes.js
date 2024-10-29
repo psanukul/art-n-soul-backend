@@ -5,13 +5,18 @@ import {
   uploadPhotographyImages,
   deletePhotography,
   updatePhotography,
+  getPhotographies,
+  getPhotography,
 } from "../controller/photography.controller.js";
 
 const Router = express.Router();
 
-Router.route("/").post(upload.array("images[]"), createPhotography);
+Router.route("/")
+.get(getPhotographies)
+.post(upload.array("images[]"), createPhotography);
 
 Router.route("/:photographyId")
+  .get(getPhotography)
   .put(updatePhotography)
   .delete(deletePhotography);
 

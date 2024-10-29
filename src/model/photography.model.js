@@ -18,6 +18,10 @@ const photographySchema = new Schema(
       required: true,
       trim: true,
     },
+    thumbnail:{
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       enum: ["International", "Indian"],
