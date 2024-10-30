@@ -229,7 +229,7 @@ export const getPhotography = asyncHandler(async (req, res) => {
     const mediaFiles = await Media.find({
       category: photography._id,
       categoryModel: "Photography",
-      type: "video",
+      type: "image",
     });
 
     res.status(200).json({
