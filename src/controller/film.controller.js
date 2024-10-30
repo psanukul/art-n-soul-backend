@@ -160,6 +160,7 @@ export const getFilms = asyncHandler(async (req, res) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const films = await Film.find({}, 'name description date type thumbnail')
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
 
