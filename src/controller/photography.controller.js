@@ -181,21 +181,51 @@ export const uploadPhotographyImages = asyncHandler(async (req, res) => {
 });
 
 export const deletePhotography = asyncHandler(async (req, res) => {
-  const { photographyId } = req.params;
-
   try {
-    const photography = await Photography.findByIdAndDelete(photographyId);
+    const { photographyId } = req.params;
 
-    if (!photography) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Photography document not found." });
+    if (!photographyId) {
+      return res.status(400).json({
+        success: false,
+        message: "Photography ID is required.",
+      });
     }
+
+    // Find the photography by ID
+    const photography = await Photography.findById(photographyId);
+    if (!photography) {
+      return res.status(404).json({
+        success: false,
+        message: "Photography not found.",
+      });
+    }
+
+    // Extract Cloudinary public ID from the thumbnail URL if it exists
+    if (photography.thumbnail) {
+      const thumbnailPublicId = photography.thumbnail.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(`photography/thumbnails/${thumbnailPublicId}`);
+    }
+
+    // Find and delete all related media files
+    const mediaFiles = await Media.find({ 
+      category: photography._id,
+      categoryModel: "Photography",
+      type: "image"
+    });
+
+    const deletePromises = mediaFiles.map(async (media) => {
+      const publicId = media.url.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(`photography/${publicId}`);
+      await media.deleteOne();
+    });
+
+    await Promise.all(deletePromises);
+
+    await photography.deleteOne();
 
     res.status(200).json({
       success: true,
-      message: "Photography document deleted successfully.",
-      deletedId: photographyId,
+      message: "Photography and all related media files deleted successfully.",
     });
   } catch (error) {
     console.error("Error deleting photography:", error);

@@ -184,3 +184,47 @@ export const getFilms = asyncHandler(async (req, res) => {
     });
   }
 });
+
+export const deleteFilm = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Film ID is required.",
+      });
+    }
+
+    const film = await Film.findById(id);
+    if (!film) {
+      return res.status(404).json({
+        success: false,
+        message: "Film not found.",
+      });
+    }
+
+    const thumbnailUrl = film.thumbnail;
+    const publicId = thumbnailUrl.split("/").pop().split(".")[0]; // Assumes thumbnail URL format allows extraction
+
+    await cloudinary.uploader.destroy(`thumbnails/${publicId}`);
+
+    await Media.deleteMany({
+      category: film._id,
+      categoryModel: "Film",
+    });
+
+    await film.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Film and related media files deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting film:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error. Could not delete film.",
+    });
+  }
+});
