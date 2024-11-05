@@ -2,9 +2,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { authModel } from "../model/auth.model.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { saveAccessTokenToCookie } from "../utils/index.js";
-import { accessTokenValidity, refreshTokenValidity } from "../utils/index.js";
 
 // -------------------------------------------------------------------------------------------
 

@@ -1,7 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import fs from "fs";
-
 dotenv.config();
 
 cloudinary.config({
@@ -10,8 +9,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const deleteMediaFromCloudinary = async (media, resourceType = 'image') => {
-  const publicId = media.url.split('/').slice(-2).join('/').split('.')[0]; 
+export const deleteMediaFromCloudinary = async (
+  media,
+  resourceType = "image"
+) => {
+  const publicId = media.url.split("/").slice(-2).join("/").split(".")[0];
   console.log(`Deleting Cloudinary resource with public ID: ${publicId}`);
 
   const result = await cloudinary.uploader.destroy(publicId, {
@@ -20,7 +22,7 @@ export const deleteMediaFromCloudinary = async (media, resourceType = 'image') =
   });
 
   console.log(`Cloudinary deletion result:`, result);
-  return result;  
+  return result;
 };
 
 export const uploadFile = async (files) => {
@@ -54,15 +56,18 @@ export const uploadFile = async (files) => {
 };
 
 export const deleteFilesFromCloudinary = async (fileNames) => {
-  const fileNameLen = fileNames.length
-  for(let i=0;i<fileNameLen;i++){
-   cloudinary.uploader.destroy(fileNames[i]).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      return {status: false, error: err}
-    })
-  } 
-  return {status: true, message: 'file deleted successfully'}
-}
+  const fileNameLen = fileNames.length;
+  for (let i = 0; i < fileNameLen; i++) {
+    cloudinary.uploader
+      .destroy(fileNames[i])
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        return { status: false, error: err };
+      });
+  }
+  return { status: true, message: "file deleted successfully" };
+};
 
-export default cloudinary
+export default cloudinary;

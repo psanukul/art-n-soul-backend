@@ -209,6 +209,8 @@ export const deleteFilm = asyncHandler(async (req, res) => {
 
     await cloudinary.uploader.destroy(`thumbnails/${publicId}`);
 
+    console.log('deleted ->',publicId);
+
     await Media.deleteMany({
       category: film._id,
       categoryModel: "Film",
