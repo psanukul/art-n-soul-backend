@@ -99,7 +99,7 @@ export const createPhotography = asyncHandler(async (req, res) => {
 export const updatePhotography = asyncHandler(async (req, res) => {
   try {
     const { photographyId } = req.params;
-    console.log(photographyId);
+    console.log(photographyId, req.body);
     const { description, date, name, type } = req.body;
 
     const photography = await Photography.findById(photographyId);
