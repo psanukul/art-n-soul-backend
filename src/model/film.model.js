@@ -4,6 +4,10 @@ const { Schema, model } = mongoose;
 
 const filmSchema = new Schema(
   {
+    videoUrl: {
+      type: String,
+      required: true
+    },
     description: {
       type: String,
       required: true,

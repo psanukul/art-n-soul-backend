@@ -36,12 +36,14 @@ import authRouter from "./src/routes/auth.routes.js";
 import photographyRouter from "./src/routes/photography.routes.js"
 import mediaRouter from "./src/routes/media.routes.js"
 import filmRouter from "./src/routes/film.routes.js"
+import globalRouter from "./src/routes/globalData.routes.js"
 
 // routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/photography", photographyRouter);
 app.use("/api/v1/media",mediaRouter)
 app.use("/api/v1/film",filmRouter)
+app.use("/api/v1/global",globalRouter)
 
 
 
