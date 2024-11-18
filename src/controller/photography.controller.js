@@ -100,7 +100,7 @@ export const updatePhotography = asyncHandler(async (req, res) => {
   try {
     const { photographyId } = req.params;
     console.log(photographyId, req.body);
-    const { description, date, name, type } = req.body;
+    const { description, date, name, type, thumbnailUrl } = req.body;
 
     const photography = await Photography.findById(photographyId);
     if (!photography) {
@@ -113,6 +113,20 @@ export const updatePhotography = asyncHandler(async (req, res) => {
     if (date) photography.date = date;
     if (name) photography.name = name;
     if (type) photography.type = type;
+    if(thumbnailUrl) photography.thumbnail = thumbnailUrl;
+
+    if (req.file) {
+      const thumbnailUploadResult = await cloudinary.uploader.upload(
+        req.file.path,
+        {
+          folder: "photography/thumbnails",
+        }
+      );
+
+      // Remove the old thumbnail (if any) and update the thumbnail URL
+      fs.unlinkSync(req.file.path);
+      photography.thumbnail = thumbnailUploadResult.secure_url;
+    }
 
     await photography.save();
 

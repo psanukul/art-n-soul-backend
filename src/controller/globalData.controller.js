@@ -42,12 +42,28 @@ export const createGridItems = asyncHandler(async (req, res) => {
 });
 
 export const getGridItems = asyncHandler(async (req, res) => {
-  console.log('im hree')
+  console.log("im hree");
   const gridItems = await GridItem.find();
 
   res.status(200).json({
     success: true,
     data: gridItems,
     message: "Grid Items Fetched Successfully",
+  });
+});
+
+export const deleteGridItem = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const isDeleted = await GridItem.findByIdAndDelete(id);
+  if (!isDeleted) {
+    return res.status(404).json({
+      success: false,
+      message: "Grid Item not found.",
+    });
+  }
+  res.status(200).json({
+    success: true,
+    data: {},
+    message: "Grid Item Deleted Successfully",
   });
 });

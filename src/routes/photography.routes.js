@@ -17,7 +17,7 @@ Router.route("/")
 
 Router.route("/:photographyId")
   .get(getPhotography)
-  .put(updatePhotography)
+  .put(upload.single("thumbnail"),updatePhotography)
   .delete(deletePhotography);
 
 Router.route("/images/:photographyId").patch(
