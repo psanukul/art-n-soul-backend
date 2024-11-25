@@ -292,17 +292,22 @@ export const getPhotography = asyncHandler(async (req, res) => {
 
 export const getPhotographies = asyncHandler(async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, type } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
 
+    const filter = {};
+    if (type) {
+      filter.type = type; 
+    }
+
     const Photographies = await Photography.find(
-      {},
+      filter,
       "name description date type thumbnail"
     )
       .skip(skip)
       .limit(Number(limit));
 
-    const totalPhotographies = await Photography.countDocuments();
+    const totalPhotographies = await Photography.countDocuments(filter);
 
     res.status(200).json({
       success: true,
