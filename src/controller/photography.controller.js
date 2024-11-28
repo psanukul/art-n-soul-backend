@@ -113,7 +113,7 @@ export const updatePhotography = asyncHandler(async (req, res) => {
     if (date) photography.date = date;
     if (name) photography.name = name;
     if (type) photography.type = type;
-    if(thumbnailUrl) photography.thumbnail = thumbnailUrl;
+    if (thumbnailUrl) photography.thumbnail = thumbnailUrl;
 
     if (req.file) {
       const thumbnailUploadResult = await cloudinary.uploader.upload(
@@ -216,15 +216,20 @@ export const deletePhotography = asyncHandler(async (req, res) => {
 
     // Extract Cloudinary public ID from the thumbnail URL if it exists
     if (photography.thumbnail) {
-      const thumbnailPublicId = photography.thumbnail.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(`photography/thumbnails/${thumbnailPublicId}`);
+      const thumbnailPublicId = photography.thumbnail
+        .split("/")
+        .pop()
+        .split(".")[0];
+      await cloudinary.uploader.destroy(
+        `photography/thumbnails/${thumbnailPublicId}`
+      );
     }
 
     // Find and delete all related media files
-    const mediaFiles = await Media.find({ 
+    const mediaFiles = await Media.find({
       category: photography._id,
       categoryModel: "Photography",
-      type: "image"
+      type: "image",
     });
 
     const deletePromises = mediaFiles.map(async (media) => {
@@ -291,39 +296,31 @@ export const getPhotography = asyncHandler(async (req, res) => {
 });
 
 export const getPhotographies = asyncHandler(async (req, res) => {
-  try {
-    const { page = 1, limit = 10, type } = req.query;
-    const skip = (Number(page) - 1) * Number(limit);
+  const { page = 1, limit = 10, type } = req.query;
+  const skip = (Number(page) - 1) * Number(limit);
 
-    const filter = {};
-    if (type && type.trim() !== "") {
-      filter.type = type; 
-    }
-
-    const Photographies = await Photography.find(
-      filter,
-      "name description date type thumbnail"
-    )
-      .skip(skip)
-      .limit(Number(limit));
-
-    const totalPhotographies = await Photography.countDocuments(filter);
-
-    res.status(200).json({
-      success: true,
-      Photographies,
-      pagination: {
-        total: totalPhotographies,
-        page: Number(page),
-        pages: Math.ceil(totalPhotographies / limit),
-        limit: Number(limit),
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching Photographies:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server Error. Could not fetch Photographies.",
-    });
+  const filter = {};
+  if (type && type.trim() !== "") {
+    filter.type = type;
   }
+
+  const Photographies = await Photography.find(
+    filter,
+    "name description date type thumbnail"
+  )
+    .skip(skip)
+    .limit(Number(limit));
+
+  const totalPhotographies = await Photography.countDocuments(filter);
+
+  res.status(200).json({
+    success: true,
+    Photographies,
+    pagination: {
+      total: totalPhotographies,
+      page: Number(page),
+      pages: Math.ceil(totalPhotographies / limit),
+      limit: Number(limit),
+    },
+  });
 });

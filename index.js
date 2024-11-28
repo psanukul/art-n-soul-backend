@@ -25,6 +25,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
       "https://art-and-soul-photography.vercel.app",
+      "https://art-n-soul-admin.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
