@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendContactMail = async (userData) => {
 
-    console.log('in here')
+    console.log('in here --. ', process.env.MAIL_ID)
 
   const htmlContent = `
       <!DOCTYPE html>
