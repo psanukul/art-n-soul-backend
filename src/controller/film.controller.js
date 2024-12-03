@@ -5,9 +5,9 @@ import cloudinary from "../utils/cloudinary.js";
 import fs from "fs";
 
 export const createFilm = asyncHandler(async (req, res) => {
-  try {
-    const { description, date, name, type, videoUrl } = req.body;
-    if (!description || !date || !name || !type || !videoUrl) {
+ 
+    const { description, date, name, videoUrl } = req.body;
+    if (!description || !date || !name || !videoUrl) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required." });
@@ -32,7 +32,6 @@ export const createFilm = asyncHandler(async (req, res) => {
       description,
       date,
       name,
-      type,
       thumbnail: thumbnailUploadResult.secure_url,
       videoUrl,
     });
@@ -51,19 +50,12 @@ export const createFilm = asyncHandler(async (req, res) => {
       message: "Film created and media files added successfully.",
       film: newFilm,
     });
-  } catch (error) {
-    console.error("Error creating film:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server Error. Could not create film.",
-    });
-  }
 });
 
 export const updateFilm = asyncHandler(async (req, res) => {
-  try {
+ 
     const { id } = req.params;
-    const { description, date, name, type, videoUrl } = req.body;
+    const { description, date, name, videoUrl } = req.body;
 
     const film = await Film.findById(id);
     if (!film) {
@@ -75,7 +67,6 @@ export const updateFilm = asyncHandler(async (req, res) => {
     film.description = description || film.description;
     film.date = date || film.date;
     film.name = name || film.name;
-    film.type = type || film.type;
 
     if (req.file) {
       const thumbnailUploadResult = await cloudinary.uploader.upload(
@@ -106,13 +97,6 @@ export const updateFilm = asyncHandler(async (req, res) => {
       message: "Film updated successfully.",
       film,
     });
-  } catch (error) {
-    console.error("Error updating film:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server Error. Could not update film.",
-    });
-  }
 });
 
 export const getFilm = asyncHandler(async (req, res) => {
@@ -160,7 +144,7 @@ export const getFilms = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10 } = req.query; 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const films = await Film.find({}, 'name description date type thumbnail videoUrl')
+    const films = await Film.find({}, 'name description date thumbnail videoUrl')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));

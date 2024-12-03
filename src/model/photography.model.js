@@ -22,11 +22,6 @@ const photographySchema = new Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      enum: ["International", "Indian"],
-      required: true,
-    },
   },
   { timestamps: true }
 );

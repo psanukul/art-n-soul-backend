@@ -6,9 +6,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createPhotography = asyncHandler(async (req, res) => {
   try {
-    const { description, date, name, type } = req.body;
+    const { description, date, name } = req.body;
 
-    if (!description || !date || !name || !type) {
+    if (!description || !date || !name ) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required." });
@@ -43,7 +43,6 @@ export const createPhotography = asyncHandler(async (req, res) => {
       description,
       date,
       name,
-      type,
       thumbnail: thumbnailUrl,
     });
     await newPhotography.save();
@@ -100,7 +99,7 @@ export const updatePhotography = asyncHandler(async (req, res) => {
   try {
     const { photographyId } = req.params;
     console.log(photographyId, req.body);
-    const { description, date, name, type, thumbnailUrl } = req.body;
+    const { description, date, name, thumbnailUrl } = req.body;
 
     const photography = await Photography.findById(photographyId);
     if (!photography) {
@@ -112,7 +111,6 @@ export const updatePhotography = asyncHandler(async (req, res) => {
     if (description) photography.description = description;
     if (date) photography.date = date;
     if (name) photography.name = name;
-    if (type) photography.type = type;
     if (thumbnailUrl) photography.thumbnail = thumbnailUrl;
 
     if (req.file) {
@@ -296,17 +294,13 @@ export const getPhotography = asyncHandler(async (req, res) => {
 });
 
 export const getPhotographies = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, type } = req.query;
+  const { page = 1, limit = 10 } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
-  const filter = {};
-  if (type && type.trim() !== "") {
-    filter.type = type;
-  }
 
   const Photographies = await Photography.find(
-    filter,
-    "name description date type thumbnail"
+    {},
+    "name description date thumbnail"
   )
     .skip(skip)
     .limit(Number(limit));

@@ -22,11 +22,6 @@ const filmSchema = new Schema(
       required: true,
       trim: true,
     },
-    type: {
-      type: String,
-      enum: ["International", "Indian"],
-      required: true,
-    },
     thumbnail: {
       type: String, 
       required: true,
