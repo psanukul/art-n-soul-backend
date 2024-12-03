@@ -305,7 +305,7 @@ export const getPhotographies = asyncHandler(async (req, res) => {
     .skip(skip)
     .limit(Number(limit));
 
-  const totalPhotographies = await Photography.countDocuments();
+  const totalPhotographies = await Photography.countDocuments({});
 
   res.status(200).json({
     success: true,
