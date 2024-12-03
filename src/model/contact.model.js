@@ -14,11 +14,27 @@ const contactSchema = new mongoose.Schema(
       type: String,
       required: [true, "E-Mail is required"],
     },
-    message: {
+    aboutWedding: {
       type: String,
       maxLength: 1000,
-      required: [true, "Message is required"],
+      required: [true, "About Wedding is required"],
     },
+    guestCount: {
+      type: Number,
+    },
+    location: {
+      type: String,
+      required: [true, "Location is required"],
+    },
+    eventDate: {
+      type: Date,
+      required: [true, "Event Date is required"],
+    },
+    serviceType:{
+      type:String,
+      required:[true,"Service type is required"]
+    }
+
   },
   { timestamps: true }
 );

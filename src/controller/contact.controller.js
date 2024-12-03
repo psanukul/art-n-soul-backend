@@ -3,16 +3,43 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendContactMail } from "../utils/nodeMailer.js";
 
 export const contact = asyncHandler(async (req, res) => {
-  const { name, mobile, email, message } = req.body;
+  const {
+    name,
+    mobile,
+    email,
+    aboutWedding,
+    guestCount,
+    location,
+    eventDate,
+    serviceType,
+  } = req.body;
 
-  if (!name && !mobile && !email && !message) {
+  if (!name && !mobile && !email && !aboutWedding) {
     return res
       .status(500)
       .json({ status: false, message: "Incomplete form data" });
   }
 
-  await sendContactMail({ name, mobile, email, message });
-  const contact = await contactModel.create({ name, mobile, email, message });
+  await sendContactMail({
+    name,
+    mobile,
+    email,
+    aboutWedding,
+    guestCount,
+    location,
+    eventDate,
+    serviceType,
+  });
+  const contact = await contactModel.create({
+    name,
+    mobile,
+    email,
+    aboutWedding,
+    guestCount: guestCount || 0,
+    location,
+    eventDate,
+    serviceType,
+  });
 
   res
     .status(200)
@@ -33,12 +60,10 @@ export const getAllContacts = asyncHandler(async (req, res) => {
   res.status(200).json({ status: true, totalPages, data: result });
 });
 
-
-
 export const deleteContact = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  if(!id){
-    res.status(500).json({status: false, message: 'Missing ID'})
+  if (!id) {
+    res.status(500).json({ status: false, message: "Missing ID" });
   }
   const isIdValid = await contactModel.findByIdAndDelete(id);
   if (!isIdValid) {

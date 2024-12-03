@@ -82,21 +82,38 @@ export const sendContactMail = async (userData) => {
           <table>
               <tr>
                   <td><strong>Name:</strong></td>
-                  <td>${userData.name}</td>
+                  <td>${userData?.name}</td>
               </tr>
               <tr>
                   <td><strong>E-Mail:</strong></td>
-                  <td>${userData.email}</td>
+                  <td>${userData?.email}</td>
               </tr>
               <tr>
                   <td><strong>Mobile:</strong></td>
-                  <td>${userData.mobile}</td>
+                  <td>${userData?.mobile}</td>
               </tr>
               <tr>
-                  <td><strong>Message:</strong></td>
-                  <td>${userData.message}</td>
+                  <td><strong>About Wedding:</strong></td>
+                  <td>${userData?.aboutWedding}</td>
               </tr>
-             
+              ${userData?.guestCount ?
+                `<tr>
+                  <td><strong>Guest Count:</strong></td>
+                  <td>${userData?.guestCount}</td>
+              </tr>` : ''
+              }
+              <tr>
+                  <td><strong>Event Location:</strong></td>
+                  <td>${userData?.location}</td>
+              </tr>
+             <tr>
+                  <td><strong>Event Date:</strong></td>
+                  <td>${userData?.eventDate}</td>
+              </tr>
+              <tr>
+                  <td><strong>Service Type:</strong></td>
+                  <td>${userData?.serviceType}</td>
+              </tr>
           </table>
       </div>
   </body>
